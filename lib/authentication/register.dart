@@ -129,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
               primary: Colors.cyan,
             ),),
             SizedBox(height: 10,),
