@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodpanda_sellers_app/widgets/customeTextField.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -8,9 +9,18 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController anyController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        CustomTextField(
+        controller: anyController,
+        data: Icons.phone,
+        hintText: "Phone",
+        isObsecure: false,
+        enabled: false,),
+      ],);
   }
 }
 
