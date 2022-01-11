@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:foodpanda_sellers_app/authentication/auth_screen.dart';
 
 
 class MySplashScreen extends StatefulWidget {
@@ -9,6 +12,19 @@ class MySplashScreen extends StatefulWidget {
 }
 
 class _MySplashScreenState extends State<MySplashScreen> {
+
+  startTimer(){
+    Timer(Duration(seconds: 60), () async {
+      Navigator.push(context, MaterialPageRoute(builder: (c) => AuthScreen()));
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -18,7 +34,10 @@ class _MySplashScreenState extends State<MySplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("images/splash.jpg"),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Image.asset("images/splash.jpg"),
+              ),
               const SizedBox(height: 10,),
               const Padding(
                 padding: EdgeInsets.all(18.0),
