@@ -14,7 +14,7 @@ class MySplashScreen extends StatefulWidget {
 class _MySplashScreenState extends State<MySplashScreen> {
 
   startTimer(){
-    Timer(Duration(seconds: 60), () async {
+    Timer(Duration(seconds: 1), () async {
       Navigator.push(context, MaterialPageRoute(builder: (c) => AuthScreen()));
     });
   }
