@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodpanda_sellers_app/widgets/customeTextField.dart';
+import 'package:foodpanda_sellers_app/widgets/error_dialog.dart';
+import 'package:foodpanda_sellers_app/widgets/loading_dialog.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -24,6 +28,73 @@ class _RegisterScreenState extends State<RegisterScreen> {
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
 
+  Position? position;
+
+  String sellerImageURL = "";
+
+  Future<void> _getImage() async {
+
+    imageXFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      imageXFile;
+    });
+  }
+
+
+  Future<void> _formValidation() async {
+    if(imageXFile == null){
+      showDialog(context: context, builder: (c){
+        return ErrorDialog(
+          message: "Please Select an Image",
+        );
+      });
+    }
+    else{
+      if(passwordController.text == confirmpasswordController.text)
+      {
+        //start uploading
+        if(confirmpasswordController.text.isNotEmpty
+            && emailController.text.isNotEmpty
+            && nameController.text.isNotEmpty
+            && phoneController.text.isNotEmpty
+            )
+        {
+          //start uploading
+          showDialog(context: context, builder: (c)
+          {
+            return LoadingDialog(
+              message: "Registring Account",
+            );
+          }
+          );
+          String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+          fStorage.Reference reference = fStorage.FirebaseStorage.instance.ref().
+          child("sellers").child(fileName);
+          fStorage.UploadTask uploadTask = reference.putFile(File(imageXFile!.path));
+          fStorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+          await taskSnapshot.ref.getDownloadURL().then((url) {
+            sellerImageURL = url;
+          });
+        }
+        else{
+          showDialog(context: context, builder: (c){
+            return ErrorDialog(
+              message: "Complete the Required info",
+            );
+          });
+
+        }
+      }
+      else{
+          showDialog(context: context, builder: (c){
+            return ErrorDialog(
+              message: "Password Incorrect",
+            );
+          });
+
+    }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -33,6 +104,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children:  [
             SizedBox(height: 10,),
             InkWell(
+              onTap: (){
+                _getImage();
+              },
               child: CircleAvatar(
                 radius: MediaQuery.of(context).size.width*0.20,
                 backgroundColor: Colors.white,
@@ -121,7 +195,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             SizedBox(height: 30,),
             ElevatedButton(
-              onPressed: ()=>print("Clicked"), child: Text(
+              onPressed: ()
+              {
+                // print("Text");
+                _formValidation();
+              }, child: Text(
               "Sign Up",
               style: TextStyle(
                 color: Colors.white,
